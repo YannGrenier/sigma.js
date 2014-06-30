@@ -25,8 +25,10 @@
         sX = source[prefix + 'x'],
         sY = source[prefix + 'y'],
         tX = target[prefix + 'x'],
-        tY = target[prefix + 'y'],
-        aSize = thickness * 2.5,
+        tY = target[prefix + 'y'];
+
+    thickness = (edge.hover) ? settings('edgeHoverSizeRatio') * thickness : thickness;
+    var aSize = thickness * 2.5,
         d = Math.sqrt(Math.pow(tX - sX, 2) + Math.pow(tY - sY, 2)),
         aX = sX + (tX - sX) * (d - aSize - tSize) / d,
         aY = sY + (tY - sY) * (d - aSize - tSize) / d,
@@ -47,14 +49,19 @@
       }
 
     if (edge.active) {
-      context.strokeStyle = settings('edgeActiveColor') === 'edge' ?
+      color = settings('edgeActiveColor') === 'edge' ?
         (color || defaultEdgeColor) :
         settings('defaultEdgeActiveColor');
     }
-    else {
-      context.strokeStyle = color;
+    else if (edge.hover) {
+      if (settings('edgeHoverColor') === 'edge') {
+        color = edge.hover_color || color;
+      } else {
+        color = edge.hover_color || settings('defaultEdgeHoverColor') || color;
+      }
     }
-
+    
+    context.strokeStyle = color;
     context.lineWidth = thickness;
     context.beginPath();
     context.moveTo(sX, sY);

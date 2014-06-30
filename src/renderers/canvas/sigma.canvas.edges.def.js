@@ -17,6 +17,7 @@
           edge.active_color || settings('defaultEdgeActiveColor') : 
           edge.color,
         prefix = settings('prefix') || '',
+        size = edge[prefix + 'size'] || 1,
         edgeColor = settings('edgeColor'),
         defaultNodeColor = settings('defaultNodeColor'),
         defaultEdgeColor = settings('defaultEdgeColor');
@@ -35,14 +36,20 @@
       }
 
     if (edge.active) {
-      context.strokeStyle = settings('edgeActiveColor') === 'edge' ?
+      color = settings('edgeActiveColor') === 'edge' ?
         (color || defaultEdgeColor) :
         settings('defaultEdgeActiveColor');
     }
-    else {
-      context.strokeStyle = color;
+    else if (edge.hover) {
+      if (settings('edgeHoverColor') === 'edge') {
+        color = edge.hover_color || color;
+      } else {
+        color = edge.hover_color || settings('defaultEdgeHoverColor') || color;
+      }
+      size *= settings('edgeHoverSizeRatio');
     }
 
+    context.strokeStyle = color;
     context.lineWidth = edge[prefix + 'size'] || 1;
     context.beginPath();
     context.moveTo(
