@@ -369,6 +369,8 @@
           'rightClickNodes',
           'doubleClickEdge',
           'doubleClickEdges',
+          'rightClickEdge',
+          'rightClickEdges',
           'overNode',
           'overNodes',
           'overEdge',

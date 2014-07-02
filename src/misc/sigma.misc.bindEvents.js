@@ -217,10 +217,12 @@
           });
         } else if (edges.length) {
           self.dispatchEvent('clickEdge', {
-            edge: edges[0]
+            edge: edges[0],
+            captor: e.data
           });
           self.dispatchEvent('clickEdges', {
-            edge: edges
+            edge: edges,
+            captor: e.data
           });
         } else
           self.dispatchEvent('clickStage', {captor: e.data});
@@ -244,6 +246,15 @@
             node: nodes,
             captor: e.data
           });
+        } else if (edges.length) {
+          self.dispatchEvent('doubleClickEdge', {
+            edge: edges[0],
+            captor: e.data
+          });
+          self.dispatchEvent('doubleClickEdges', {
+            edge: edges,
+            captor: e.data
+          });
         } else
           self.dispatchEvent('doubleClickStage', {captor: e.data});
       }
@@ -252,24 +263,31 @@
         if (!self.settings('eventsEnabled'))
           return;
 
-        self.dispatchEvent('rightClick', e.data);
+        self.dispatchEvent('rightClick', {captor: e.data});
+
+        nodes = getNodes(e);
+        edges = getEdges(e);
 
         if (nodes.length) {
           self.dispatchEvent('rightClickNode', {
-            node: nodes[0]
+            node: nodes[0],
+            captor: e.data
           });
           self.dispatchEvent('rightClickNodes', {
-            node: nodes
+            node: nodes,
+            captor: e.data
           });
         } else if (edges.length) {
-          self.dispatchEvent('doubleClickEdge', {
-            edge: edges[0]
+          self.dispatchEvent('rightClickEdge', {
+            edge: edges[0],
+            captor: e.data
           });
-          self.dispatchEvent('doubleClickEdges', {
-            edge: edges
+          self.dispatchEvent('rightClickEdges', {
+            edge: edges,
+            captor: e.data
           });
         } else
-          self.dispatchEvent('rightClickStage');
+          self.dispatchEvent('rightClickStage', {captor: e.data});
       }
 
       function onOut(e) {
@@ -389,19 +407,23 @@
         // Dispatch both single and multi events:
         for (i = 0, le = newOverEdges.length; i < le; i++)
           self.dispatchEvent('overEdge', {
-            edge: newOverEdges[i]
+            edge: newOverEdges[i],
+            captor: e.data
           });
         for (i = 0, le = newOutEdges.length; i < le; i++)
           self.dispatchEvent('outEdge', {
-            edge: newOutEdges[i]
+            edge: newOutEdges[i],
+            captor: e.data
           });
         if (newOverEdges.length)
           self.dispatchEvent('overEdges', {
-            edges: newOverEdges
+            edges: newOverEdges,
+            captor: e.data
           });
         if (newOutEdges.length)
           self.dispatchEvent('outEdges', {
-            edges: newOutEdges
+            edges: newOutEdges,
+            captor: e.data
           });
       }
 
