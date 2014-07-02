@@ -76,8 +76,8 @@ for (i = 0; i < N; i++)
     y: Math.random(),
     size: Math.random(),
     color: '#666',
-    active_size: 1.5,
     //active_color: 'rgb(236, 81, 72)',
+    active_size: 1.5,
     active: [false, true][Math.random() * 1.05 | 0]
   });
 
@@ -88,6 +88,7 @@ for (i = 0; i < E; i++)
     target: 'n' + (Math.random() * N | 0),
     size: Math.random(),
     color: '#ccc',
+    hover_color: '#000',
     active_size: 1.5,
     //active_color: 'rgb(236, 81, 72)',
     active: [false, true][Math.random() * 1.05 | 0],
@@ -108,6 +109,8 @@ s = new sigma({
     outerBorderSize: 1,
     defaultNodeBorderColor: '#fff',
     defaultNodeOuterBorderColor: 'rgb(236, 81, 72)',
+    enableEdgeHovering: true,
+    edgeHoverHighlightNodes: 'circle',
   }
 });
 
