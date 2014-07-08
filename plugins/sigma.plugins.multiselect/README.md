@@ -9,6 +9,8 @@ This plugin enables you to:
 - click on nodes and edges to activate them (i.e. to "select" them);
 - press Ctrl or Meta key while clicking to add nodes or edges to the selection.
 
+If the sigma.events.drag plugin is present, dragging nodes or edges won't select them.
+
 See the following [example code](../../examples/multi-select.html) for full usage.
 
 To use, include all .js files under this folder. Then initialize it as follows:
