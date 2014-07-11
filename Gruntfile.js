@@ -71,6 +71,7 @@ module.exports = function(grunt) {
     'plugins.neighborhoods',,
     'plugins.popup',
     'plugins.relativeSize',
+    'renderers.customEdgeShapes',
     'renderers.customShapes'
   ];
 
