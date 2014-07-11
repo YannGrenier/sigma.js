@@ -56,6 +56,8 @@
    *   {?array}  renderers An array containing objects describing renderers.
    *   {?object} graph     An object containing an array of nodes and an array
    *                       of edges, to avoid having to add them by hand later.
+   *   {?graph } store     An object containing an instance of
+   *                       sigma.classes.graph.
    *   {?object} settings  An object containing instance specific settings that
    *                       will override the default ones defined in the object
    *                       sigma.settings.
@@ -135,7 +137,9 @@
 
     // Initialize locked attributes:
     Object.defineProperty(this, 'graph', {
-      value: new sigma.classes.graph(this.settings),
+      value: _conf.store instanceof sigma.classes.graph ?
+        _conf.store :
+        new sigma.classes.graph(this.settings),
       configurable: true
     });
     Object.defineProperty(this, 'middlewares', {
