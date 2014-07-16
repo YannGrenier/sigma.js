@@ -35,7 +35,9 @@
   var graph = function(settings) {
     var k,
         fn,
-        data;
+        data,
+        _self = this;
+
 
     /**
      * DATA:
@@ -81,6 +83,29 @@
       allNeighborsCount: Object.create(null)
     };
 
+    // Dispatch events:
+    sigma.classes.dispatcher.extend(data);
+    sigma.classes.dispatcher.extend(this);
+
+    // Add a custom handler, to redispatch events from renderers:
+    this._handler = (function(e) {
+      var k,
+          data = {};
+
+      for (k in e.data)
+        data[k] = e.data[k];
+
+      this.dispatchEvent(e.type, data);
+    }).bind(this);
+
+    data.bind(
+      [
+        'activeNodes',
+        'activeEdges'
+      ],
+      this._handler
+    );
+
     // Execute bindings:
     for (k in _initBindings)
       _initBindings[k].call(data);
@@ -92,8 +117,6 @@
       data[k] = fn;
     }
   };
-
-
 
 
   /**
@@ -1007,6 +1030,10 @@
         else
           throw 'activateNodesIndex: Wrong arguments.';
       }
+
+      this.dispatchEvent('activeNodes', {
+        nodes: this.activeNodes()
+      });
     }
   });
 
@@ -1080,6 +1107,10 @@
         else
           throw 'activeEdgesIndex: Wrong arguments.';
       }
+
+      this.dispatchEvent('activeEdges', {
+        edges: this.activeEdges()
+      });
     }
   });
 

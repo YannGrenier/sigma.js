@@ -390,7 +390,9 @@
           'upNode',
           'upNodes',
           'upEdge',
-          'upEdges'
+          'upEdges',
+          'activeNodes',
+          'activeEdges'
         ],
         this._handler
       );
