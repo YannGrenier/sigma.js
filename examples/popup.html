@@ -189,7 +189,7 @@ s = new sigma({
 });*/
 
 // Instanciate the popup plugin with a Mustache renderer for node popups:
-sigma.plugins.popup(s, {
+var popup = sigma.plugins.popup(s, {
   node: {
     show: 'overNode',
     hide: 'outNode',
@@ -211,9 +211,22 @@ sigma.plugins.popup(s, {
     renderer: function(node, template) {
       // The function context is s.graph
       node.degree = this.degree(node.id);
+
+      // Returns an HTML string:
       return Mustache.render(template, node);
+
+      // Returns a DOM Element:
+      //var el = document.createElement('div');
+      //return el.innerHTML = Mustache.render(template, node);
     }
   }
 });
 
+popup.bind('shown', function(event) {
+  console.log('popup shown', event);
+});
+
+popup.bind('hidden', function(event) {
+  console.log('popup hidden', event);
+});
 </script>

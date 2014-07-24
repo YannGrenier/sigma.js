@@ -113,12 +113,19 @@
     _popup = document.createElement('div');
     if (options.renderer) {
       // Copy the object:
-      var clone = Object.create(null), 
+      var clone = Object.create(null),
+          renderer, 
           k;
       for (k in o)
         clone[k] = o[k];
 
-      _popup.innerHTML = options.renderer.call(s.graph, clone, options.template);
+      renderer = options.renderer.call(s.graph, clone, options.template);
+
+      if (typeof renderer === 'string')
+         _popup.innerHTML = renderer;
+      else
+          // renderer is a dom element:
+         _popup.appendChild(renderer);
     } else {
       _popup.innerHTML = options.template;
     }
@@ -253,9 +260,9 @@
    *   {?string}   template   The HTML template. It is directly inserted inside
    *                          a div element unless a renderer is specified.
    *   {?function} renderer   This function may process the template or be used
-   *                          independently. It should return an HTML string.
-   *                          It is executed at runtime. Its context is
-   *                          sigma.graph.
+   *                          independently. It should return an HTML string or
+   *                          a DOM element. It is executed at runtime. Its
+   *                          context is sigma.graph.
    *   {?string}   cssClass   The CSS class attached to the top div element.
    *                          Default value: "sigma-popup".
    *   {?string}   position   The position of the popup regarding the mouse. If
@@ -280,9 +287,12 @@
    * @param {object} options An object with options.
    */
   sigma.plugins.popup = function(s, options) {
+    var _self = this;
     var so = extend(options.stage, settings.stage);
     var no = extend(options.node, settings.node);
     var eo = extend(options.edge, settings.edge);
+
+    sigma.classes.dispatcher.extend(this);
 
     // STAGE POPUP:
     if (options.stage) {
@@ -314,17 +324,23 @@
             so,
             clientX,
             clientY);
+
+          _self.dispatchEvent('shown');
         }, so.delay);     
       });
 
       s.bind(so.hide, function(event) {
+        var p = _popup;
         cancelPopup();
+        if (p)
+          _self.dispatchEvent('hidden');
       });
 
       if (so.show !== 'doubleClickStage') {
         s.bind('doubleClickStage', function(event) {
           cancelPopup();
           _doubleClick = true;
+          _self.dispatchEvent('hidden');
           setTimeout(function() {
             _doubleClick = false;
           }, settings.doubleClickDelay);
@@ -363,17 +379,23 @@
             no,
             clientX,
             clientY);
+
+          _self.dispatchEvent('shown');
         }, no.delay);     
       });
 
       s.bind(no.hide, function(event) {
+        var p = _popup;
         cancelPopup();
+        if (p)
+          _self.dispatchEvent('hidden');
       });
 
       if (no.show !== 'doubleClickNode') {
         s.bind('doubleClickNode', function(event) {
           cancelPopup();
           _doubleClick = true;
+          _self.dispatchEvent('hidden');
           setTimeout(function() {
             _doubleClick = false;
           }, settings.doubleClickDelay);
@@ -412,17 +434,23 @@
             eo,
             clientX,
             clientY);
+
+          _self.dispatchEvent('shown');
         }, eo.delay);     
       });
 
       s.bind(eo.hide, function(event) {
+        var p = _popup;
         cancelPopup();
+        if (p)
+          _self.dispatchEvent('hidden');
       });
 
       if (eo.show !== 'doubleClickEdge') {
         s.bind('doubleClickEdge', function(event) {
           cancelPopup();
           _doubleClick = true;
+          _self.dispatchEvent('hidden');
           setTimeout(function() {
             _doubleClick = false;
           }, settings.doubleClickDelay);
@@ -437,6 +465,8 @@
         event.preventDefault();
       });
     }
+
+    return this;
   };
 
 }).call(window);
