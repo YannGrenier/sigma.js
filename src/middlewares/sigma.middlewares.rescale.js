@@ -43,7 +43,18 @@
         sizeMax = bounds.sizeMax,
         weightMax = bounds.weightMax,
         w = settings('width') || 1,
-        h = settings('height') || 1;
+        h = settings('height') || 1,
+        rescaleSettings = settings('autoRescale');
+
+    /**
+     * What elements should we rescale?
+     */
+    if (!(rescaleSettings instanceof Array))
+      rescaleSettings = ['nodePosition', 'nodeSize', 'edgeSize'];
+
+    var np = ~rescaleSettings.indexOf('nodePosition'),
+        ns = ~rescaleSettings.indexOf('nodeSize'),
+        es = ~rescaleSettings.indexOf('edgeSize');
 
     /**
      * First, we compute the scaling ratio, without considering the sizes
@@ -114,25 +125,15 @@
     }
 
     // Rescale the nodes and edges:
-    var size;
-    for (i = 0, l = e.length; i < l; i++) {
-      size = e[i].active && !readPrefix.length ? 
-          e[i].active_size || e[i].size :
-          e[i][readPrefix + 'size'];
-
-      e[i][writePrefix + 'size'] = size * c + d;
-    }
+    for (i = 0, l = e.length; i < l; i++)
+      e[i][writePrefix + 'size'] = e[i][readPrefix + 'size'] * (es ? c + d : 1);
 
     for (i = 0, l = n.length; i < l; i++) {
-      size = n[i].active && !readPrefix.length ? 
-          n[i].active_size || n[i].size :
-          n[i][readPrefix + 'size'];
-
-      n[i][writePrefix + 'size'] = size * a + b;
+      n[i][writePrefix + 'size'] = n[i][readPrefix + 'size'] * (ns ? a + b : 1);
       n[i][writePrefix + 'x'] =
-        (n[i][readPrefix + 'x'] - (maxX + minX) / 2) * scale;
+        (n[i][readPrefix + 'x'] - (maxX + minX) / 2) * (np ? scale : 1);
       n[i][writePrefix + 'y'] =
-        (n[i][readPrefix + 'y'] - (maxY + minY) / 2) * scale;
+        (n[i][readPrefix + 'y'] - (maxY + minY) / 2) * (np ? scale : 1);
     }
   };
 
