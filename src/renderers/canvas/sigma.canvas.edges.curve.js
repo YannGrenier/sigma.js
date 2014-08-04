@@ -21,6 +21,11 @@
         edgeColor = settings('edgeColor'),
         defaultNodeColor = settings('defaultNodeColor'),
         defaultEdgeColor = settings('defaultEdgeColor'),
+        sSize = source[prefix + 'size'],
+        sX = source[prefix + 'x'],
+        sY = source[prefix + 'y'],
+        tX = target[prefix + 'x'],
+        tY = target[prefix + 'y'],
         cp = sigma.utils.getCP(source, target, prefix);
 
     if (!color)
@@ -53,16 +58,17 @@
     context.strokeStyle = color;
     context.lineWidth = edge[prefix + 'size'] || 1;
     context.beginPath();
-    context.moveTo(
-      source[prefix + 'x'],
-      source[prefix + 'y']
-    );
-    context.quadraticCurveTo(
-      cp.x,
-      cp.y,
-      target[prefix + 'x'],
-      target[prefix + 'y']
-    );
+    context.moveTo(sX, sY);
+    if (source.id === target.id) {
+      cp.x = sX - sSize * 7;
+      cp.y = sY;
+      var cp2 = {};
+      cp2.x = sX;
+      cp2.y = sY + sSize * 7;
+      context.bezierCurveTo(cp2.x, cp2.y, cp.x, cp.y, tX, tY);
+    } else {
+      context.quadraticCurveTo(cp.x, cp.y, tX, tY);
+    }
     context.stroke();
   };
 })();

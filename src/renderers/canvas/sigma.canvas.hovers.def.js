@@ -41,14 +41,14 @@
       (color || defaultNodeColor) :
       settings('defaultHoverLabelBGColor');
 
-    if (settings('labelHoverShadow')) {
+    if (node.label && settings('labelHoverShadow')) {
       context.shadowOffsetX = 0;
       context.shadowOffsetY = 0;
       context.shadowBlur = 8;
       context.shadowColor = settings('labelHoverShadowColor');
     }
 
-    if (typeof node.label === 'string') {
+    if (node.label && typeof node.label === 'string') {
       x = Math.round(node[prefix + 'x'] + 
         borderSize + 
         settings('outerBorderSize') - 
