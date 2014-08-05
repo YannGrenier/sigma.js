@@ -79,7 +79,6 @@
 
     var treatOutNode = function(event) {
       // Remove the node from the array
-      console.log(event);
       var indexCheck = _hoverStack.map(function(e) { return e; }).indexOf(event.data.node);
       _hoverStack.splice(indexCheck, 1);
 
@@ -98,8 +97,6 @@
         _mouse.removeEventListener('mousedown', nodeMouseDown);
         _body.addEventListener('mousemove', nodeMouseMove);
         _body.addEventListener('mouseup', nodeMouseUp);
-
-        renderer.unbind('outNode', treatOutNode);
 
         // Do not refresh edgequadtree during drag:
         var k,
@@ -120,9 +117,6 @@
       _mouse.addEventListener('mousedown', nodeMouseDown);
       _body.removeEventListener('mousemove', nodeMouseMove);
       _body.removeEventListener('mouseup', nodeMouseUp);
-
-      treatOutNode();
-      renderer.bind('outNode', treatOutNode);
 
 
       // Allow to refresh edgequadtree:
