@@ -18,7 +18,7 @@
    * =============================
    *
    * @author Sébastien Heymann <seb@linkurio.us> (Linkurious)
-   * @version 0.1
+   * @version 0.2
    */
 
   var settings = {
@@ -55,7 +55,8 @@
     doubleClickDelay: 800
   };
 
-  var _popup,
+  var _instance,
+      _popup,
       _timeoutHandle,
       _doubleClick = false;
 
@@ -287,12 +288,23 @@
    * @param {object} options An object with options.
    */
   sigma.plugins.popup = function(s, options) {
-    var _self = this;
+    if (_instance !== undefined) {
+      return _instance;
+    }
+
+    _instance = this;
     var so = extend(options.stage, settings.stage);
     var no = extend(options.node, settings.node);
     var eo = extend(options.edge, settings.edge);
 
     sigma.classes.dispatcher.extend(this);
+
+    // INTERFACE:
+    this.close = function() {
+      cancelPopup();
+      return this;
+    };
+
 
     // STAGE POPUP:
     if (options.stage) {
@@ -325,7 +337,7 @@
             clientX,
             clientY);
 
-          _self.dispatchEvent('shown');
+          _instance.dispatchEvent('shown');
         }, so.delay);     
       });
 
@@ -333,14 +345,14 @@
         var p = _popup;
         cancelPopup();
         if (p)
-          _self.dispatchEvent('hidden');
+          _instance.dispatchEvent('hidden');
       });
 
       if (so.show !== 'doubleClickStage') {
         s.bind('doubleClickStage', function(event) {
           cancelPopup();
           _doubleClick = true;
-          _self.dispatchEvent('hidden');
+          _instance.dispatchEvent('hidden');
           setTimeout(function() {
             _doubleClick = false;
           }, settings.doubleClickDelay);
@@ -380,7 +392,7 @@
             clientX,
             clientY);
 
-          _self.dispatchEvent('shown');
+          _instance.dispatchEvent('shown');
         }, no.delay);     
       });
 
@@ -388,14 +400,14 @@
         var p = _popup;
         cancelPopup();
         if (p)
-          _self.dispatchEvent('hidden');
+          _instance.dispatchEvent('hidden');
       });
 
       if (no.show !== 'doubleClickNode') {
         s.bind('doubleClickNode', function(event) {
           cancelPopup();
           _doubleClick = true;
-          _self.dispatchEvent('hidden');
+          _instance.dispatchEvent('hidden');
           setTimeout(function() {
             _doubleClick = false;
           }, settings.doubleClickDelay);
@@ -435,7 +447,7 @@
             clientX,
             clientY);
 
-          _self.dispatchEvent('shown');
+          _instance.dispatchEvent('shown');
         }, eo.delay);     
       });
 
@@ -443,14 +455,14 @@
         var p = _popup;
         cancelPopup();
         if (p)
-          _self.dispatchEvent('hidden');
+          _instance.dispatchEvent('hidden');
       });
 
       if (eo.show !== 'doubleClickEdge') {
         s.bind('doubleClickEdge', function(event) {
           cancelPopup();
           _doubleClick = true;
-          _self.dispatchEvent('hidden');
+          _instance.dispatchEvent('hidden');
           setTimeout(function() {
             _doubleClick = false;
           }, settings.doubleClickDelay);
