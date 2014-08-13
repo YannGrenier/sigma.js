@@ -20,12 +20,19 @@
    * attributes. These attributes represent the coordinates of the nodes in
    * the real container, not in canvas.
    *
+   * Fired events:
+   * *************
+   * startdrag  Fired at the beginning of the drag.
+   * drag       Fired while the node is dragged.
+   * drop       Fired at the end of the drag if the node has been dragged.
+   * dragend    Fired at the end of the drag.
+   *
    * Recognized parameters:
    * **********************
    * @param  {sigma}    s        The related sigma instance.
    * @param  {renderer} renderer The related renderer instance.
    */
-  sigma.plugins.dragNodes = function(s, renderer) {
+  function DragNodes(s, renderer) {
     sigma.classes.dispatcher.extend(this);
 
     // A quick hardcoded rule to prevent people from using this plugin with the
@@ -105,7 +112,7 @@
     var nodeMouseDown = function(event) {
       _isMouseDown = true;
       var size = s.graph.nodes().length;
-      if (size > 1) {
+      if (size > 0) {
         _mouse.removeEventListener('mousedown', nodeMouseDown);
         _body.addEventListener('mousemove', nodeMouseMove);
         _body.addEventListener('mouseup', nodeMouseUp);
@@ -216,8 +223,26 @@
 
     renderer.bind('overNode', nodeMouseOver);
     renderer.bind('outNode', treatOutNode);
+  };
 
-    return this;
+  /**
+   * Interface
+   * ------------------
+   *
+   * > var dragNodesListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+   */
+  var _instance = null;
+
+  /**
+   * @param  {sigma} s The related sigma instance.
+   * @param  {renderer} renderer The related renderer instance.
+   */
+  sigma.plugins.dragNodes = function(s, renderer) {
+    // Create object if undefined
+    if (!_instance) {
+      _instance = new DragNodes(s, renderer);
+    }
+    return _instance;
   };
 
 }).call(window);
