@@ -38,7 +38,6 @@
 <script src="../src/misc/sigma.misc.drawHovers.js"></script>
 <!-- END SIGMA IMPORTS -->
 <script src="../plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
-<script src="../plugins/sigma.events.drag/sigma.events.drag.js"></script>
 <div id="container">
   <style>
     #graph-container {
@@ -48,8 +47,19 @@
       right: 0;
       position: absolute;
     }
+
+    #sidebar {
+      bottom: 0;
+      right: 0;
+      width: 200px;
+      height: 150px;
+      position: absolute;
+      background-color: #999;
+      padding: 10px;
+    }
   </style>
   <div id="graph-container"></div>
+  <div id="sidebar">This area is not a drop target.</div>
 </div>
 <script>
 /**
@@ -91,14 +101,18 @@ s = new sigma({
 });
 
 // Initialize the dragNodes plugin:
-sigma.plugins.dragNodes(s, s.renderers[0]);
+var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
 
-// Handle 'drag' and 'drop' events:
-var _dragListener = new sigma.events.drag(s.renderers[0]);
-_dragListener.bind('drag', function(e) {
-    console.log(e.type);
+dragListener.bind('startdrag', function(event) {
+  console.log(event);
 });
-_dragListener.bind('drop', function(e) {
-    console.log(e.type);
+dragListener.bind('drag', function(event) {
+  console.log(event);
+});
+dragListener.bind('drop', function(event) {
+  console.log(event);
+});
+dragListener.bind('dragend', function(event) {
+  console.log(event);
 });
 </script>
