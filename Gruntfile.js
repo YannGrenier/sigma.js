@@ -66,6 +66,7 @@ module.exports = function(grunt) {
     'plugins.animate',
     'plugins.dragNodes',
     'plugins.filter',
+    'plugins.locate',
     'plugins.multiselect',
     'plugins.neighborhoods',
     'plugins.popup',
